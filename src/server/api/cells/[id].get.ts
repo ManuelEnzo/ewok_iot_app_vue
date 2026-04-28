@@ -1,5 +1,5 @@
 // GET /api/cells/:id
-import { MOCK_CELLS } from '../../_data/cells'
+import { MOCK_CELLS } from '../_data/cells'
 
 export default defineEventHandler((event) => {
   requireApiKey(event)
