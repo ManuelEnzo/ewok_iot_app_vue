@@ -117,28 +117,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
-import L from 'leaflet'
+import { ref, onMounted, onUnmounted, watch, computed, nextTick } from 'vue'
+import type * as LeafletType from 'leaflet'
 import { useIoTStore } from '@/store/iot'
 import { IoTDataService } from '@/services/IoTDataService'
 import type { IoTCell } from '@/models/iot'
 import LiveIndicator from '@/components/ui/LiveIndicator.vue'
-
-// Fix default icon paths for Vite
-delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl:       'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl:     'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-})
 
 const store          = useIoTStore()
 const mapContainer   = ref<HTMLDivElement | null>(null)
 const mapReady       = ref(false)
 const selectedCellId = ref<string | null>(null)
 
-let leafletMap: L.Map | null         = null
-const markerMap = new Map<string, L.Marker>()
+let L: typeof LeafletType | null     = null
+let leafletMap: LeafletType.Map | null = null
+const markerMap = new Map<string, LeafletType.Marker>()
 
 const selectedCell = computed(() =>
   selectedCellId.value
@@ -208,7 +201,8 @@ function buildPopupHtml (cell: IoTCell): string {
   `
 }
 
-function createCellMarker (cell: IoTCell): L.Marker {
+function createCellMarker (cell: IoTCell): LeafletType.Marker {
+  if (!L) throw new Error('Leaflet not loaded')
   const color  = cellColor(cell)
   const icon   = L.divIcon({
     className: '',
@@ -237,8 +231,18 @@ function createCellMarker (cell: IoTCell): L.Marker {
   return marker
 }
 
-function initMap () {
+async function initMap () {
   if (!mapContainer.value) return
+
+  L = await import('leaflet')
+
+  // Fix default icon paths broken by bundlers
+  delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+    iconUrl:       'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+    shadowUrl:     'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  })
 
   leafletMap = L.map(mapContainer.value, {
     center:         [45.65, 12.3],
@@ -262,11 +266,13 @@ function initMap () {
 }
 
 function updateMarkers () {
+  if (!L) return
+  const _L = L as typeof LeafletType
   store.cells.forEach(cell => {
     const marker = markerMap.get(cell.id)
     if (!marker) return
     const color = cellColor(cell)
-    const icon  = L.divIcon({
+    const icon  = _L.divIcon({
       className: '',
       html: `<div style="
         width:16px;height:16px;border-radius:50%;
@@ -294,7 +300,7 @@ function selectCell (cell: IoTCell) {
 
 watch(() => store.cells, updateMarkers, { deep: false })
 
-onMounted  (() => { initMap() })
+onMounted  (async () => { await nextTick(); initMap() })
 onUnmounted(() => { leafletMap?.remove(); leafletMap = null })
 </script>
 

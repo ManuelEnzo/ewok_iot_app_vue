@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
 
-  css: ['~/assets/main.css'],
+  css: ['leaflet/dist/leaflet.css', '~/assets/main.css'],
 
   typescript: {
     strict: true,
