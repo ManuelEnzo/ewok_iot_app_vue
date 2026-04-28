@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm install && vue-tsc --noEmit && vite build",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
