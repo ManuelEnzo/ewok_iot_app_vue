@@ -34,10 +34,14 @@
             <span class="w-2 h-2 rounded-full bg-brand-400 animate-pulse-slow"></span>
             <span class="text-brand-400 text-xs font-medium">{{ activeCellCount }} celle attive</span>
           </div>
+          <NuxtLink
+            to="/dashboard"
+            class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-semibold transition-all duration-200"
+          >Dashboard</NuxtLink>
           <button
             class="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold transition-all duration-200 shadow-lg hover:shadow-brand-500/25"
-            @click="scrollTo('contatti')"
-          >Contattaci</button>
+            @click="scrollTo('prezzi')"
+          >Inizia</button>
         </div>
 
       </div>
@@ -59,6 +63,7 @@ const navItems = [
   { id: 'mappa',       label: 'Mappa Live' },
   { id: 'dashboard',   label: 'Dashboard' },
   { id: 'tecnologie',  label: 'Tecnologie' },
+  { id: 'prezzi',      label: 'Prezzi' },
   { id: 'contatti',    label: 'Contatti' },
 ]
 
