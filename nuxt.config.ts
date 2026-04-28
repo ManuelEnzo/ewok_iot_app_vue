@@ -3,6 +3,10 @@ export default defineNuxtConfig({
   ssr: false,
   srcDir: 'src/',
 
+  nitro: {
+    preset: 'vercel',
+  },
+
   modules: [
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt',
