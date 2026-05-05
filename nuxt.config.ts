@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   srcDir: 'src/',
 
   nitro: {
-    preset: 'vercel',
+    preset: 'netlify',
   },
 
   modules: [
