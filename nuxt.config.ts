@@ -35,11 +35,10 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      // In dev il proxy Nitro gestisce /api/v1, quindi apiBase è vuoto.
-      // In produzione imposta NUXT_PUBLIC_API_BASE con l'URL completo del backend.
-      apiBase: process.env.NODE_ENV === 'production'
-        ? (process.env.NUXT_PUBLIC_API_BASE ?? '')
-        : '',
+      // In dev: rimane '' → le chiamate /api/v1/* vengono catturate dal devProxy Nitro.
+      // In produzione: impostare NUXT_PUBLIC_API_BASE su Netlify (build env vars).
+      // Nuxt sovrascrive automaticamente apiBase con il valore di NUXT_PUBLIC_API_BASE.
+      apiBase: '',
     },
   },
 
