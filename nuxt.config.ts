@@ -5,17 +5,8 @@ export default defineNuxtConfig({
 
   nitro: {
     preset: 'netlify',
-    devProxy: {
-      '/api/v1': {
-        target: (process.env.API_TARGET ?? 'http://localhost:5147') + '/api/v1',
-        changeOrigin: true,
-        secure: false,
-        headers: {
-          // Bypass ngrok browser interstitial (ERR_NGROK_6024)
-          'ngrok-skip-browser-warning': 'true',
-        },
-      },
-    },
+    // Nessun devProxy: la server route src/server/routes/api/v1/[...].ts
+    // gestisce il proxy sia in dev (Nitro) che in prod (Netlify Function).
   },
 
   modules: [
