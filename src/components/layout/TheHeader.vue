@@ -35,13 +35,34 @@
             <span class="text-brand-400 text-xs font-medium">{{ activeCellCount }} celle attive</span>
           </div>
           <NuxtLink
-            to="/dashboard"
+            to="/portal"
             class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-semibold transition-all duration-200"
           >Dashboard</NuxtLink>
-          <button
-            class="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold transition-all duration-200 shadow-lg hover:shadow-brand-500/25"
-            @click="scrollTo('prezzi')"
-          >Inizia</button>
+
+          <!-- Authenticated: show portal link + user avatar -->
+          <template v-if="authStore.isAuthenticated">
+            <NuxtLink
+              to="/portal"
+              class="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold transition-all duration-200 shadow-lg hover:shadow-brand-500/25"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              Portale
+            </NuxtLink>
+          </template>
+
+          <!-- Not authenticated -->
+          <template v-else>
+            <NuxtLink
+              to="/login"
+              class="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white text-sm font-semibold transition-all duration-200"
+            >Accedi</NuxtLink>
+            <button
+              class="px-4 py-2 rounded-lg bg-brand-600 hover:bg-brand-500 text-white text-sm font-semibold transition-all duration-200 shadow-lg hover:shadow-brand-500/25"
+              @click="scrollTo('prezzi')"
+            >Inizia</button>
+          </template>
         </div>
 
       </div>
@@ -52,9 +73,11 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useIoTStore } from '@/store/iot'
+import { useAuthStore } from '@/store/auth'
 
-const store = useIoTStore()
-const scrolled = ref(false)
+const store     = useIoTStore()
+const authStore = useAuthStore()
+const scrolled  = ref(false)
 
 const activeCellCount = computed(() => store.activeCells.length)
 
@@ -77,6 +100,9 @@ function scrollTo (id: string) {
 
 function onScroll () { scrolled.value = window.scrollY > 30 }
 
-onMounted  (() => window.addEventListener('scroll', onScroll))
+onMounted  (() => {
+  window.addEventListener('scroll', onScroll)
+  authStore.restoreFromStorage()
+})
 onUnmounted(() => window.removeEventListener('scroll', onScroll))
 </script>

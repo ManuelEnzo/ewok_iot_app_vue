@@ -265,27 +265,53 @@ async function initMap () {
   setTimeout(() => { mapReady.value = true }, 400)
 }
 
-function updateMarkers () {
-  if (!L) return
-  const _L = L as typeof LeafletType
-  store.cells.forEach(cell => {
-    const marker = markerMap.get(cell.id)
-    if (!marker) return
-    const color = cellColor(cell)
-    const icon  = _L.divIcon({
-      className: '',
-      html: `<div style="
-        width:16px;height:16px;border-radius:50%;
-        background:${color};
-        box-shadow:0 0 0 4px ${color}33, 0 0 12px ${color}66;
-        border:2px solid rgba(255,255,255,0.3)
-      "></div>`,
-      iconSize:   [16, 16],
-      iconAnchor: [8, 8],
-    })
-    marker.setIcon(icon)
-    marker.setPopupContent(buildPopupHtml(cell))
+// Dopo l'init, se le celle arrivano in ritardo (caricamento async), sincronizza
+watch(() => store.cells, () => { if (mapReady.value) syncMarkers() }, { deep: false })
+
+function syncMarkers () {
+  if (!L || !leafletMap) return
+  const _L  = L as typeof LeafletType
+  const _lm = leafletMap
+
+  const currentIds = new Set(store.cells.map(c => c.id))
+
+  // Rimuovi marker per celle non più presenti
+  markerMap.forEach((marker, id) => {
+    if (!currentIds.has(id)) {
+      marker.remove()
+      markerMap.delete(id)
+    }
   })
+
+  // Aggiungi nuovi marker / aggiorna esistenti
+  store.cells.forEach(cell => {
+    const color = cellColor(cell)
+    const iconHtml = `<div style="
+      width:16px;height:16px;border-radius:50%;
+      background:${color};
+      box-shadow:0 0 0 4px ${color}33, 0 0 12px ${color}66;
+      border:2px solid rgba(255,255,255,0.3)
+    "></div>`
+
+    if (markerMap.has(cell.id)) {
+      // Aggiorna icona e popup
+      const marker = markerMap.get(cell.id)!
+      marker.setIcon(_L.divIcon({ className: '', html: iconHtml, iconSize: [16, 16], iconAnchor: [8, 8] }))
+      marker.setPopupContent(buildPopupHtml(cell))
+    } else {
+      // Crea e aggiungi nuovo marker
+      const icon   = _L.divIcon({ className: '', html: iconHtml, iconSize: [16, 16], iconAnchor: [8, 8] })
+      const marker = _L.marker([cell.lat, cell.lng], { icon })
+      marker.bindPopup(buildPopupHtml(cell), { className: 'ewok-popup', maxWidth: 260, closeButton: true })
+      marker.on('click', () => { selectedCellId.value = cell.id; store.selectCell(cell.id) })
+      marker.addTo(_lm)
+      markerMap.set(cell.id, marker)
+    }
+  })
+}
+
+function updateMarkers () {
+  syncMarkers()
 }
 
 function selectCell (cell: IoTCell) {
@@ -297,8 +323,6 @@ function selectCell (cell: IoTCell) {
     marker.openPopup()
   }
 }
-
-watch(() => store.cells, updateMarkers, { deep: false })
 
 onMounted  (async () => { await nextTick(); initMap() })
 onUnmounted(() => { leafletMap?.remove(); leafletMap = null })

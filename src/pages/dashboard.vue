@@ -119,6 +119,8 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 
+definePageMeta({ middleware: 'auth' })
+
 const route = useRoute()
 
 const apiKey      = ref((route.query.key as string) || 'ewk_live_mock1234567890abcdef')

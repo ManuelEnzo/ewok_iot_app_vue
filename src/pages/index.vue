@@ -27,7 +27,7 @@ const store = useIoTStore()
 
 onMounted(() => {
   store.initialize()
-  store.startLiveUpdates(8000)
+  store.startLiveUpdates(5 * 60 * 1000) // ogni 5 minuti
 })
 
 onUnmounted(() => {
