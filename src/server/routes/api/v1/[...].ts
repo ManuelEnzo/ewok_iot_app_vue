@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
       'ngrok-skip-browser-warning': 'true',
     },
     fetchOptions: {
-      // Ignora errori SSL per certificati self-signed
+      // ...existing code...
       // @ts-ignore
       rejectUnauthorized: false,
     },

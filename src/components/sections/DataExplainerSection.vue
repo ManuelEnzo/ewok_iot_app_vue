@@ -44,14 +44,17 @@
 
       <!-- Air quality scale -->
       <div class="mt-16 p-6 rounded-2xl bg-slate-900/60 border border-white/8">
-        <h3 class="text-white font-bold text-lg mb-6 text-center">Scala Qualità Aria Interna (IAQ)</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+        <h3 class="text-white font-bold text-lg mb-2 text-center">Scala Qualità Aria Interna (IAQ)</h3>
+        <p class="text-slate-400 text-xs text-center mb-6 max-w-2xl mx-auto">
+          L’indice IAQ classifica la qualità dell’aria interna su una scala da “Eccellente” a “Pericolosa”. Più il valore è basso, migliore è la qualità dell’aria. Segui la legenda per interpretare i dati rilevati dai sensori.
+        </p>
+        <div class="flex flex-wrap justify-center gap-3">
           <div v-for="level in aqScale" :key="level.label"
-               class="p-4 rounded-xl text-center border transition-all hover:scale-105"
+               class="flex flex-col items-center text-center p-4 rounded-xl border min-w-[120px] max-w-[160px] transition-all hover:scale-105 shadow-sm"
                :class="level.bgClass + ' ' + level.borderClass">
-            <div class="text-2xl mb-2">{{ level.icon }}</div>
+            <div class="text-3xl mb-2">{{ level.icon }}</div>
             <div class="font-bold text-sm mb-1" :class="level.textClass">{{ level.label }}</div>
-            <div class="text-slate-500 text-xs font-mono">{{ level.range }}</div>
+            <div class="text-slate-400 text-xs font-mono mb-1">{{ level.range }}</div>
           </div>
         </div>
       </div>

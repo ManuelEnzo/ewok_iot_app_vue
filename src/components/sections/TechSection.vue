@@ -118,7 +118,7 @@ const protocols = [
     checkColor: 'text-brand-400',
     desc:       'Perfetto per aree remote, montagna e zone senza copertura WiFi. Consumi minimi per deployment a batteria con autonomia pluriannuale. Topologia point-to-point o mesh.',
     specs: [
-      'Portata fino a 15 km in campo aperto',
+      'Portata fino a 5 km in campo aperto',
       'Consumi < 50mA in trasmissione',
       'Frequenza 868 MHz (EU band)',
       'Crittografia AES-128',

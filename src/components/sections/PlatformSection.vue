@@ -128,7 +128,7 @@ const valuePoints = [
   { title: 'Installazione chiavi in mano',  desc: 'Dalla progettazione al deployment: nessuna competenza tecnica richiesta.' },
   { title: 'Dashboard white-label',         desc: 'Personalizzabile con il brand del cliente per rivendita e PA.' },
   { title: 'API REST aperte',               desc: 'Integrazione con sistemi esistenti, SCADA, BMS e piattaforme cloud.' },
-  { title: 'Conformità GDPR & ISO 27001',  desc: 'Dati ospitati in Italia, massima sicurezza e privacy.' },
+
 ]
 
 const clientTypes = [

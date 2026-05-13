@@ -41,9 +41,9 @@
       </div>
 
       <!-- Trust indicators -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12">
+      <div class="flex flex-wrap justify-center gap-4 mt-12">
         <div v-for="trust in trustPoints" :key="trust.label"
-             class="flex flex-col items-center text-center p-4 rounded-xl bg-white/3 border border-white/8">
+             class="flex flex-col items-center text-center p-4 rounded-xl bg-white/3 border border-white/8 min-w-[180px] max-w-xs">
           <div class="text-2xl mb-2">{{ trust.icon }}</div>
           <div class="text-white font-semibold text-sm mb-1">{{ trust.label }}</div>
           <div class="text-slate-500 text-xs">{{ trust.desc }}</div>
@@ -57,7 +57,7 @@
 <script setup lang="ts">
 const trustPoints = [
   { icon: '🇮🇹', label: 'Made in Italy',     desc: 'Progettato e supportato in Italia' },
-  { icon: '🔐', label: 'GDPR Compliant',     desc: 'Dati ospitati in EU' },
+
   { icon: '📞', label: 'Supporto 24/7',      desc: 'Assistenza tecnica inclusa' },
   { icon: '⚙️', label: 'Installazione Rapida', desc: 'Operativo in 48 ore' },
 ]
